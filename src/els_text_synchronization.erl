@@ -27,19 +27,28 @@ did_save(Params) ->
   ok.
 
 -spec did_close(map()) -> ok.
-did_close(_Params) -> ok.
+did_close(_Params) -> ok. 
 
 %%==============================================================================
-%% Internal functions
+%% Internal functions  
 %%==============================================================================
 
 -spec generate_diagnostics(uri()) -> ok.
-generate_diagnostics(Uri) ->
-  CDiagnostics = els_compiler_diagnostics:diagnostics(Uri),
-  DDiagnostics = els_dialyzer_diagnostics:diagnostics(Uri),
-  EDiagnostics = els_elvis_diagnostics:diagnostics(Uri),
+generate_diagnostics(Uri) -> %hi
+  lager:error("Generatin diagnostics"),
   Method = <<"textDocument/publishDiagnostics">>,
-  Params1  = #{ uri => Uri
-              , diagnostics => CDiagnostics ++ DDiagnostics ++ EDiagnostics
-              },
-  els_server:send_notification(Method, Params1).
+  try
+    CDiagnostics = els_compiler_diagnostics:diagnostics(Uri),
+    DDiagnostics = els_dialyzer_diagnostics:diagnostics(Uri),
+    EDiagnostics = els_elvis_diagnostics:diagnostics(Uri),
+    GDiagnostics = els_gradualizer_diagnostics:diagnostics(Uri),
+    #{ uri => Uri
+                , diagnostics => CDiagnostics ++ DDiagnostics ++ EDiagnostics ++ GDiagnostics
+                }
+  of 
+    AllDiagnostics -> els_server:send_notification(Method, AllDiagnostics)
+  catch
+  _:_ = Error -> 
+    lager:error("Error while generating diagnostifcs: ~p for file ~p", [Error, Uri])
+  end.
+ 

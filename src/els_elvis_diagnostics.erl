@@ -46,7 +46,7 @@ source() ->
 %%==============================================================================
 -spec format_diagnostics(any()) -> [map()].
 format_diagnostics(#{file := Path, rules := Rules}) ->
-  R = format_rules(Path, Rules),
+  R = format_rules(Path, Rules), 
   lists:flatten(R).
 
 

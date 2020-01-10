@@ -90,7 +90,7 @@ reset_internal_state() ->
 %%==============================================================================
 -spec init(module()) -> {ok, state()}.
 init(Transport) ->
-  lager:info("Starting els_server..."),
+  lager:info("Starting els_server... bla bla bla"),
   State = #state{ transport      = Transport
                 , internal_state = #{}
                 },
@@ -103,6 +103,8 @@ handle_call({reset_internal_state}, _From, State) ->
   {reply, ok, State#state{internal_state = #{}}}.
 
 -spec handle_cast(any(), state()) -> {noreply, state()}.
+handle_cast({process_requests, exit}, State) ->
+  {stop, shutdown, State};
 handle_cast({process_requests, Requests}, State0) ->
   State = lists:foldl(fun handle_request/2, State0, Requests),
   {noreply, State};
@@ -145,7 +147,7 @@ handle_request(Request, #state{internal_state = InternalState} = State0) ->
 -spec do_send_notification(binary(), map(), state()) -> ok.
 do_send_notification(Method, Params, State) ->
   Notification = els_protocol:notification(Method, Params),
-  lager:debug( "[SERVER] Sending notification [notification=~s]"
+  lager:info( "[SERVER] Sending notification [notification=~s]"
              , [Notification]
              ),
   send(Notification, State).

@@ -33,7 +33,7 @@ notification(Method, Params) ->
   content(jsx:encode(Message)).
 
 -spec request(number(), binary(), any()) -> iolist().
-request(RequestId, Method, Params) ->
+request(RequestId, Method, Params) -> 
   Message = #{ jsonrpc => ?JSONRPC_VSN
              , method  => Method
              , id      => RequestId

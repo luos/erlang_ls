@@ -17,19 +17,20 @@
       , ephemeral
       , rebar3_format
       , tdiff
+      , gradualizer
       ]
     }
   , { env
     , [ {transport, els_tcp}
       , {io_device, standard_io}
       , {port, 10000}
-      , {debug_mode, false}
+      , {debug_mode, true}
         %% Indexing
       , {indexers, 10}
       , {index_otp, true}
       , {index_deps, true}
         %% Logging
-      , {logging_enabled, false}
+      , {logging_enabled, true}
       ]
     }
   , {modules, []}

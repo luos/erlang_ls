@@ -196,6 +196,7 @@ handle_call({Action, Opts}, _From, State) when Action =:= did_save
                                                orelse Action =:= did_close
                                                orelse Action =:= did_open ->
   #state{transport_cb = Cb, transport_server = Server} = State,
+  lager:info("blah blah blah"), 
   Method = method_lookup(Action),
   Params = notification_params(Opts),
   Content = els_protocol:notification(Method, Params),
@@ -232,7 +233,7 @@ handle_call(Input = {Action, _}, From, State) ->
         , request_id       = RequestId
         } = State,
   Method = method_lookup(Action),
-  Params = request_params(Input),
+  Params = request_params(Input), %%
   Content = els_protocol:request(RequestId, Method, Params),
   Cb:send(Server, Content),
   {noreply, State#state{ request_id = RequestId + 1

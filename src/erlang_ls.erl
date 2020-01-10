@@ -13,6 +13,7 @@ main(Args) ->
   ok = lager_config(),
   %% Start the Erlang Language Server
   application:ensure_all_started(?APP),
+  application:ensure_all_started(sasl),
   lager:info("Started erlang_ls server", []),
   receive _ -> ok end.
 
